@@ -2,9 +2,9 @@ import termyak
 
 
 def main():
-    actual = termyak.__name__
+    result = termyak.__name__
     expected = "termyak"
-    if actual == expected:
+    if result == expected:
         print("smoke test passed")
     else:
         raise RuntimeError("smoke test failed")

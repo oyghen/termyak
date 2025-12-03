@@ -1,4 +1,5 @@
 import importlib
+import tomllib
 from pathlib import Path
 from types import ModuleType
 
@@ -11,21 +12,12 @@ def project_pkg(project_name: str) -> ModuleType:
 
 
 @pytest.fixture(scope="module")
-def project_name(pyproject_toml: Path) -> str:
-    with open(file=pyproject_toml) as lines:
-        for line in lines:
-            if line.startswith("name"):
-                name = line.split("=")[1].strip().strip('"')
-                break
+def project_name() -> str:
+    project_root = Path(__file__).parent.parent.resolve()
+    pyproject_toml = project_root / "pyproject.toml"
+
+    with open(pyproject_toml, mode="rb") as toml_file:
+        data = tomllib.load(toml_file)
+        name = data["project"]["name"]
 
     return name
-
-
-@pytest.fixture(scope="module")
-def pyproject_toml(project_root: Path) -> Path:
-    return project_root / "pyproject.toml"
-
-
-@pytest.fixture(scope="module")
-def project_root() -> Path:
-    return Path(__file__).parent.parent.resolve()
